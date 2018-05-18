@@ -26,7 +26,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".Activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".Activity.PasscodeActivity" />
+        <activity
+            android:name=".Activity.NavigationAcitivty"
+            android:label="@string/title_activity_navigation_acitivty"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
