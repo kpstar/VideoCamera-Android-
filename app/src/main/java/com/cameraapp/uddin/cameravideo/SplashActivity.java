@@ -1,11 +1,16 @@
 package com.cameraapp.uddin.cameravideo;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.cameraapp.uddin.cameravideo.Activity.LoginActivity;
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -13,8 +18,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        getPermissions();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -25,10 +28,5 @@ public class SplashActivity extends AppCompatActivity {
                 SplashActivity.this.finish();
             }
         }, 1500);
-    }
-
-    public void getPermissions() {
-
-
     }
 }
