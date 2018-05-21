@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cameraapp.uddin.cameravideo.Custom.CameraNetwork;
@@ -27,7 +28,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static int LogInBtnID = 1001;
     public static int RegisterBtnId = 1002;
     public SharedPreferences mShare;
+    public ProgressBar mProgress;
     Intent mIntent = null;
+    AlertDialog.Builder mBuilder;
 
     EditText edtUser, edtPasswd;
 
@@ -51,6 +54,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edtPasswd = (EditText)findViewById(R.id.edtPassword);
 
         mShare = getSharedPreferences("CameraApp", Context.MODE_PRIVATE);
+        mProgress = (ProgressBar)findViewById(R.id.proBar);
+        mProgress.setVisibility(View.INVISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -92,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
+        mProgress.setVisibility(View.VISIBLE);
         CameraNetwork mNetwork = new CameraNetwork(this);
 
         if (mId == LogInBtnID) {
@@ -121,6 +127,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String temp_user = mShare.getString("Username", "");
 
         if (!temp_user.isEmpty()) {
+
+            SharedPreferences.Editor editor = mShare.edit();
+            editor.putInt("Status", 2);
+            editor.apply();
+
             mIntent = new Intent(this, PasscodeActivity.class);
             startActivity(mIntent);
             finish();
@@ -139,6 +150,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public void onReceive(Context context, Intent intent) {
 
 
+
+            mProgress.setVisibility(View.INVISIBLE);
             String mUser = edtUser.getText().toString();
             String mPasswd = edtPasswd.getText().toString();
             edtUser.setText("");
@@ -148,18 +161,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             temp_desc = intent.getStringExtra("Login");
 
-            if (temp_desc!= null) {
+            if (temp_desc == "Success") {
                 inputData(mUser, mPasswd);
                 Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (temp_desc == "Failure"){
+                mBuilder = new AlertDialog.Builder(LoginActivity.this);
+                mBuilder.setTitle("Error")
+                        .setMessage("Username or Password is incorrect.")
+                        .setNeutralButton("OK", null);
+                mBuilder.show();
                 return;
             }
 
             temp_desc = intent.getStringExtra("Register");
 
-            if (temp_desc!=null) {
+            if (temp_desc == "Success") {
                 inputData(mUser, mPasswd);
                 Toast.makeText(LoginActivity.this, "Successfully registered.", Toast.LENGTH_SHORT).show();
                 return;
+            } else {
+                mBuilder = new AlertDialog.Builder(LoginActivity.this);
+                mBuilder.setTitle("Error")
+                        .setMessage("Username already exists.")
+                        .setNeutralButton("OK", null);
+                mBuilder.show();
             }
 
         }
@@ -168,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void inputData(String user, String password) {
 
         SharedPreferences.Editor editor = mShare.edit();
-        editor.putInt("CodeStatus", 0);
+        editor.putInt("Status", 0);
         editor.putString("Username", user);
         editor.putString("Password", password);
         editor.apply();

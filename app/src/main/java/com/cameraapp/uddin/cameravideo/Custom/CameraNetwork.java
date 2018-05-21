@@ -62,11 +62,11 @@ public class CameraNetwork extends AsyncHttpClient {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                mBuilder = new AlertDialog.Builder(mContext);
-                mBuilder.setTitle("Error")
-                        .setMessage(error.getMessage())
-                        .setNeutralButton("OK", null);
-                mBuilder.show();
+                mBroad = LocalBroadcastManager.getInstance(mContext);
+
+                Intent mIntent = new Intent("Authentication");
+                mIntent.putExtra("Login", "Failure");
+                mBroad.sendBroadcast(mIntent);
             }
         });
     }
@@ -86,27 +86,19 @@ public class CameraNetwork extends AsyncHttpClient {
                 mBroad = LocalBroadcastManager.getInstance(mContext);
 
                 Intent mIntent = new Intent("Authentication");
-
-                if (statusCode == 200) {
-                    Log.e("TAG", "Success");
-                    mIntent.putExtra("Register", "Success");
-                } else {
-                    Log.e("TAG", "Fail");
-                    mIntent.putExtra("Register", "Fail");
-                }
-
-                Log.e("Register", "Success");
+                mIntent.putExtra("Register", "Success");
                 mBroad.sendBroadcast(mIntent);
 
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                mBuilder = new AlertDialog.Builder(mContext);
-                mBuilder.setTitle("Error")
-                        .setMessage(error.getMessage())
-                        .setNeutralButton("OK", null);
-                mBuilder.show();
+
+                mBroad = LocalBroadcastManager.getInstance(mContext);
+
+                Intent mIntent = new Intent("Authentication");
+                mIntent.putExtra("Register", "Failure");
+                mBroad.sendBroadcast(mIntent);
             }
         });
     }
