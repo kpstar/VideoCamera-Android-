@@ -1,5 +1,8 @@
 package com.cameraapp.uddin.cameravideo.Activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,11 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.cameraapp.uddin.cameravideo.R;
+
 
 public class NavigationAcitivty extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public SharedPreferences mShare;
+    Intent mIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +31,7 @@ public class NavigationAcitivty extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        getSupportActionBar().setTitle("My Videos");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -42,6 +41,9 @@ public class NavigationAcitivty extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
+        mShare = getSharedPreferences("CameraApp", 0);
     }
 
     @Override
@@ -82,22 +84,53 @@ public class NavigationAcitivty extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_myvideo) {
+            presentMyVideo();
+        } else if (id == R.id.nav_uploadedvideo) {
+            presentUploadedVideo();
+        } else if (id == R.id.nav_changepasscode ) {
+            changePasscode();
+        } else {
+            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void presentMyVideo() {
+
+        getSupportActionBar().setTitle("My Videos");
+    }
+
+    private void presentUploadedVideo() {
+
+        getSupportActionBar().setTitle("Uploaded Videos");
+    }
+
+    private void changePasscode() {
+
+
+        SharedPreferences.Editor editor = mShare.edit();
+        editor.putInt("Status", 0);
+        editor.apply();
+
+        mIntent = new Intent(NavigationAcitivty.this, PasscodeActivity.class);
+        startActivity(mIntent);
+        finish();
+    }
+
+    private void signOut() {
+
+        SharedPreferences.Editor editor = mShare.edit();
+        editor.remove("Username");
+        editor.remove("Password");
+        editor.remove("Passcode");
+        editor.remove("Status");
+        editor.apply();
+        mIntent = new Intent(NavigationAcitivty.this, LoginActivity.class);
+        startActivity(mIntent);
+        finish();
     }
 }

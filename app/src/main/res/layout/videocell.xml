@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
+
+    <ImageView
+        android:id="@+id/thumbNail"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:srcCompat="@color/colorWhite"/>
+    <View
+        android:id="@+id/uiView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/primary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/primary"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="Your Address"
+        app:layout_constraintBottom_toBottomOf="@+id/thumbNail" />
+</android.support.constraint.ConstraintLayout>
